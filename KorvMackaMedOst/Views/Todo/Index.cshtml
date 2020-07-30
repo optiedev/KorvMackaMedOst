@@ -1,0 +1,57 @@
+﻿@model KorvMackaMedOst.ViewModels.TodoViewModel
+@{
+    ViewData["Title"] = "Todo";
+}
+
+<h1>Todo</h1>
+<form asp-action="AddItem">
+    <div class="form-row align-items-center">
+        <div class="col-auto">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+
+                <input asp-for="Content" class="form-control" />
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-auto">
+        <div class="form-group">
+            <input type="submit" value="Add" class="btn btn-primary" />
+        </div>
+    </div>
+    </div>
+</form>
+
+<div>
+    @foreach (var todoitem in Model.TodoItems.Where(x => x.IsCompleted == false))
+    {
+        @*<div>
+            <a href="@Url.Action("UpdateItem", "Todo", new { id=todoitem.Id })" class="text-dark">
+                <i class="far fa-square"></i>
+            </a>
+            @todoitem.Content
+
+        </div>*@
+        <div>
+            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" a>
+                <i class="far fa-square"></i>
+            </a>
+            <label class="text-muted text-justify">@todoitem.Content</label>
+        </div>
+    }
+
+</div>
+
+<br />
+
+<div>
+    @foreach (var todoitem in Model.TodoItems.Where(x => x.IsCompleted == true))
+    {
+        <div>
+                <a href="@Url.Action("UpdateItem", "Todo", new { id=todoitem.Id })" class="text-muted">
+                    <i class="far fa-check-square"></i>
+                </a>
+                <label class="text-muted text-justify">@todoitem.Content</label>
+            </div>
+    }
+</div>

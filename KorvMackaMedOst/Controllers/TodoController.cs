@@ -21,15 +21,15 @@ namespace KorvMackaMedOst.Controllers
             _context = context;
             _userManager = userManager;
         }
-        public IActionResult Todo()
+        public IActionResult Index()
         {
             string userid = _userManager.GetUserId(User);
             TodoViewModel vm = new TodoViewModel();
             var todoItems = new List<TodoItem>();
-            var result=_context.TodoItems.Where(x => x.UserId == userid).ToList();
+            var result=_context.TodoItems.Where(x => x.UserId == userid);
             if(result!=null)
             {
-                vm.TodoItems = result;
+                vm.TodoItems = result.ToList();
             }
                 return View(vm);
         }
@@ -57,16 +57,31 @@ namespace KorvMackaMedOst.Controllers
             {
                 TempData["ErrorMessage"] = $"Not added: {content}. Try to login first!";
             }
-            return RedirectToAction("Todo", "Todo");
+            return RedirectToAction("Index", "Todo");
         }
-        [HttpPost]
-        public ActionResult UpdateItem(TodoItem todoItem)
+     
+        public ActionResult UpdateItem(Guid id)
         {
             var userid = _userManager.GetUserId(User);
-            if (User.Identity.IsAuthenticated && todoItem.UserId==userid)
+            if (User.Identity.IsAuthenticated)
             {
-                _context.Update(todoItem);
-                _context.SaveChanges();
+                var todoItem = _context.TodoItems.Find(id);
+                
+                if (todoItem != null && userid==todoItem.UserId)
+                {
+                    if (todoItem.IsCompleted == false)
+                    {
+                        todoItem.IsCompleted = true;
+                    }
+                    else
+                    {
+                        todoItem.IsCompleted = false;
+                    }
+                    _context.Update(todoItem);
+                    _context.SaveChanges();
+                }
+                else
+                    TempData["ErrorMessage"] = $"Could not update. Something went wrong.";
             }
             else if(!User.Identity.IsAuthenticated)
             {
@@ -74,7 +89,7 @@ namespace KorvMackaMedOst.Controllers
             }
             else
                 TempData["ErrorMessage"] = $"Could not update. Something went wrong.";
-            return RedirectToAction("Todo", "Todo");
+            return RedirectToAction("Index", "Todo");
         }
     }
 }
