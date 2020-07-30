@@ -25,18 +25,10 @@
 <div>
     @foreach (var todoitem in Model.TodoItems.Where(x => x.IsCompleted == false))
     {
-        @*<div>
-            <a href="@Url.Action("UpdateItem", "Todo", new { id=todoitem.Id })" class="text-dark">
-                <i class="far fa-square"></i>
-            </a>
+        <div>
+            <a href="@Url.Action("UpdateItem", "Todo", new { id=todoitem.Id })" class="text-dark"><i class="far fa-square"></i></a>
             @todoitem.Content
 
-        </div>*@
-        <div>
-            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" a>
-                <i class="far fa-square"></i>
-            </a>
-            <label class="text-muted text-justify">@todoitem.Content</label>
         </div>
     }
 
